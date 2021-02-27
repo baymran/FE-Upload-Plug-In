@@ -125,6 +125,17 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.upload = upload;
 
+function bytesToSize(bytes) {
+  var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+
+  if (!bytes) {
+    return '0 Byte';
+  }
+
+  var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+  return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
+}
+
 function upload(selector) {
   var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   var input = document.querySelector(selector);
@@ -165,7 +176,8 @@ function upload(selector) {
 
       reader.onload = function (event) {
         var src = event.target.result;
-        preview.insertAdjacentHTML('afterbegin', "\n                    <div class=\"preview-image\">\n                        <img src=\"".concat(src, "\" alt=\"").concat(item.name, "\" />\n                    </div>\n                "));
+        var shortName = "".concat(item.name.substr(0, 17), "...");
+        preview.insertAdjacentHTML('afterbegin', "\n                    <div class=\"preview-image\">\n                    <div class=\"preview-remove\"> &times; </div>\n                        <img src=\"".concat(src, "\" alt=\"").concat(item.name, "\" />\n                        <div class=\"preview-info\">\n                            <span>").concat(shortName, "</span>\n                            <span>").concat(bytesToSize(item.size), "</span>\n                        </div>\n                    </div>\n                "));
       };
 
       reader.readAsDataURL(item);
@@ -182,7 +194,7 @@ var _upload = require("./upload.js");
 
 (0, _upload.upload)('#file', {
   multi: true,
-  accept: ['.png', '.jpg', '.jpeg', '.gif']
+  accept: ['.jpg', '.jpeg', '.gif']
 });
 },{"./upload.js":"upload.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
