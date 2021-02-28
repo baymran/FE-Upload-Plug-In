@@ -7,12 +7,25 @@ function bytesToSize(bytes) {
     return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
  }
 
+ const element = (tag, classes = [], content) => {
+    const node = document.createElement(tag);
+    if(classes.length) {
+        node.classList.add(...classes);
+    }
+    if(content) {
+        node.textContent = content;
+    }
+
+    return node;
+ }
+
 export function upload(selector, options = {}) {
     let files = [];
     const input = document.querySelector(selector);
-    const preview = document.createElement('div');
-          preview.classList.add('preview');
-
+    const preview = element('div', ['preview']);
+    const openBtn = element('button', ['btn'], 'Открыть');
+    const upload = element('button', ['btn', 'primary'], 'Загрузить');
+    
     if (options.multi) {
         input.setAttribute('multiple', true);
     }
@@ -20,11 +33,13 @@ export function upload(selector, options = {}) {
         input.setAttribute('accept', options.accept.join(','))
     }
 
-    const openBtn = document.createElement('button');
-    openBtn.classList.add('btn');
-    openBtn.textContent = 'Открыть';
+    
+    // document.createElement('button');
+    // openBtn.classList.add('btn');
+    // openBtn.textContent = 'Открыть';
 
     input.insertAdjacentElement('afterend', preview);
+    input.insertAdjacentElement('afterend', upload);
     input.insertAdjacentElement('afterend', openBtn);
 
     const triggerInput = () => input.click();
