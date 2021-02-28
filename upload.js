@@ -25,6 +25,7 @@ export function upload(selector, options = {}) {
     const preview = element('div', ['preview']);
     const openBtn = element('button', ['btn'], 'Открыть');
     const upload = element('button', ['btn', 'primary'], 'Загрузить');
+    upload.style.display = 'none';
     
     if (options.multi) {
         input.setAttribute('multiple', true);
@@ -51,6 +52,7 @@ export function upload(selector, options = {}) {
         files = Array.from(event.target.files);
 
         preview.innerHTML = '';
+        upload.style.display = 'inline';
         files.forEach((item) => {
             if(!item.type.match('image')) {
                 return;
@@ -81,6 +83,9 @@ export function upload(selector, options = {}) {
         }
         const {name} = event.target.dataset;
         files = files.filter(file => file.name != name);
+        if(!files.length) {
+            upload.style.display = 'none';
+        }
         const block = preview
         .querySelector(`[data-name="${name}"]`)
         .closest('.preview-image');
@@ -88,7 +93,12 @@ export function upload(selector, options = {}) {
         setTimeout(() => block.remove(), 230);
     };
 
+    const uploadHandler = () => {
+
+    };
+
     openBtn.addEventListener('click', triggerInput);
     input.addEventListener('change', changeHandler);
     preview.addEventListener('click', removeHandler);
+    upload.addEventListener('click', uploadHandler);
 }

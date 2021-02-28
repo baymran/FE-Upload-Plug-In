@@ -173,6 +173,7 @@ function upload(selector) {
   var preview = element('div', ['preview']);
   var openBtn = element('button', ['btn'], 'Открыть');
   var upload = element('button', ['btn', 'primary'], 'Загрузить');
+  upload.style.display = 'none';
 
   if (options.multi) {
     input.setAttribute('multiple', true);
@@ -200,6 +201,7 @@ function upload(selector) {
 
     files = Array.from(event.target.files);
     preview.innerHTML = '';
+    upload.style.display = 'inline';
     files.forEach(function (item) {
       if (!item.type.match('image')) {
         return;
@@ -226,6 +228,11 @@ function upload(selector) {
     files = files.filter(function (file) {
       return file.name != name;
     });
+
+    if (!files.length) {
+      upload.style.display = 'none';
+    }
+
     var block = preview.querySelector("[data-name=\"".concat(name, "\"]")).closest('.preview-image');
     block.classList.add('removing');
     setTimeout(function () {
@@ -233,9 +240,12 @@ function upload(selector) {
     }, 230);
   };
 
+  var uploadHandler = function uploadHandler() {};
+
   openBtn.addEventListener('click', triggerInput);
   input.addEventListener('change', changeHandler);
   preview.addEventListener('click', removeHandler);
+  upload.addEventListener('click', uploadHandler);
 }
 },{}],"app.js":[function(require,module,exports) {
 "use strict";
