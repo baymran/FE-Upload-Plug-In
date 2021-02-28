@@ -65,6 +65,11 @@ input[type=file] {
     position: relative;
 }
 
+.preview-image.removing {
+    transform: scale(0);
+    transition: transform .3s;
+}
+
 .preview-image img {
     display: inline-block;
     width: 180px;

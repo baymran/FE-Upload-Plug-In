@@ -8,6 +8,7 @@ function bytesToSize(bytes) {
  }
 
 export function upload(selector, options = {}) {
+    let files = [];
     const input = document.querySelector(selector);
     const preview = document.createElement('div');
           preview.classList.add('preview');
@@ -32,7 +33,7 @@ export function upload(selector, options = {}) {
             return;
         }
 
-        const files = Array.from(event.target.files);
+        files = Array.from(event.target.files);
 
         preview.innerHTML = '';
         files.forEach((item) => {
@@ -46,7 +47,7 @@ export function upload(selector, options = {}) {
                 const shortName = `${item.name.substr(0, 17)}...`;
                 preview.insertAdjacentHTML('afterbegin', `
                     <div class="preview-image">
-                    <div class="preview-remove"> &times; </div>
+                    <div class="preview-remove" data-name="${item.name}"> &times; </div>
                         <img src="${src}" alt="${item.name}" />
                         <div class="preview-info">
                             <span>${shortName}</span>
@@ -59,6 +60,20 @@ export function upload(selector, options = {}) {
         });
     };
 
+    const removeHandler = (event) => {
+        if(!event.target.dataset.name) {
+            return;
+        }
+        const {name} = event.target.dataset;
+        files = files.filter(file => file.name != name);
+        const block = preview
+        .querySelector(`[data-name="${name}"]`)
+        .closest('.preview-image');
+        block.classList.add('removing');
+        setTimeout(() => block.remove(), 230);
+    };
+
     openBtn.addEventListener('click', triggerInput);
     input.addEventListener('change', changeHandler);
+    preview.addEventListener('click', removeHandler);
 }
